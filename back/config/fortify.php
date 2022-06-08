@@ -74,7 +74,7 @@ return [
     |
     */
 
-    'prefix' => '',
+    'prefix' => config('constants.constants.api_v1'),
 
     'domain' => null,
 
