@@ -4,13 +4,17 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class User extends Authenticatable  implements MustVerifyEmail
+class User extends Authenticatable  implements MustVerifyEmail, HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +24,7 @@ class User extends Authenticatable  implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        'avatar_id',
         'password',
     ];
 
@@ -31,6 +36,7 @@ class User extends Authenticatable  implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'media',
     ];
 
     /**
@@ -41,4 +47,21 @@ class User extends Authenticatable  implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Cover image
+     * @return HasOne
+     */
+    public function avatar(){
+        return $this->hasOne(Media::class, 'id', 'avatar_id');
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatar)
+        {
+            return $this->avatar->getFullUrl();
+        }
+        return '';
+    }
 }

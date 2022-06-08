@@ -15,8 +15,9 @@ class CreateNewUser implements CreatesNewUsers
     /**
      * Validate and create a newly registered user.
      *
-     * @param  array  $input
+     * @param array $input
      * @return \App\Models\User
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function create(array $input)
     {
@@ -32,11 +33,22 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+        $userId = $user->id;
+        $avatar = User::find($userId );
+        if ($avatar )
+        {
+            $uploaded = $avatar->addMedia(request()->file('avatar'))->toMediaCollection('images');
+            if ($uploaded)
+            {
+                $avatar->avatar_id = $uploaded->id;
+                $avatar->save();
+            }
+        }
+
     }
 }
