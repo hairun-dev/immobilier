@@ -25,7 +25,9 @@ module.exports = configure(function (ctx) {
     // https://v2.quasar.dev/quasar-cli-webpack/boot-files
     boot: [
       'i18n',
-      'axios'
+      'axios',
+      'axios_back',
+      'util'
     ],
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
@@ -74,7 +76,14 @@ module.exports = configure(function (ctx) {
       chainWebpack (chain) {
         chain.plugin('eslint-webpack-plugin')
           .use(ESLintPlugin, [{ extensions: ['js', 'vue'] }])
-      }
+      },
+      env: ctx.dev
+        ? { // so on dev we'll have
+            API_BASE_URL: 'http://localhost:3000/api/v1'
+        }
+        : { // and on build (production):
+            API_BASE_URL: 'https://ipsy.otwoo.space/api/v1'
+        }
 
     },
 
@@ -83,7 +92,7 @@ module.exports = configure(function (ctx) {
       server: {
         type: 'http'
       },
-      port: 8080,
+      port: 8086,
       open: true // opens browser window automatically
     },
 
@@ -102,7 +111,11 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Notify',
+        'LocalStorage',
+        'Loading'
+      ]
     },
 
     // animations: 'all', // --- includes all animations

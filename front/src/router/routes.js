@@ -1,10 +1,15 @@
 
 const routes = [
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/:lang',
+    name: 'home',
+    component: () => import('pages/IndexPage.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
+      {
+        path: '',
+        name: 'immobilier',
+        component: () => import('pages/BienImmobilier.vue')
+      }
     ]
   },
 
