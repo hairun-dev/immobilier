@@ -3,25 +3,24 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PropertyResource;
+use App\Http\Requests\StorePropertyRequest;
 use App\Models\Property;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Hash;
 
 class PropertyController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection
+     * @return JsonResponse
      */
     public function index()
     {
         $property = Property::all();
-        return PropertyResource::collection($property);
+        return \response()->json([
+            "property" => $property
+        ]);
     }
 
     /**
@@ -37,10 +36,10 @@ class PropertyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StorePropertyRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(StorePropertyRequest  $request)
     {
         $property = Property::create([
             'address' => $request->get('address'),
