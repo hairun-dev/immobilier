@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PropertyResource;
 use App\Models\Property;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Hash;
 
 class PropertyController extends Controller
@@ -14,11 +16,12 @@ class PropertyController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
-        //
+        $property = Property::all();
+        return PropertyResource::collection($property);
     }
 
     /**
@@ -27,6 +30,17 @@ class PropertyController extends Controller
      * @return JsonResponse
      */
     public function create(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request)
     {
         $property = Property::create([
             'address' => $request->get('address'),
@@ -37,29 +51,18 @@ class PropertyController extends Controller
 
         if ($property)
         {
-            $uploaded = $property->addMedia(request()->file('avatar'))->toMediaCollection('images');
-            if ($uploaded)
-            {
-                $property->avatar_id = $uploaded->id;
-                $property->save();
+            if ($request->hasFile('images')) {
+                $fileAdders = $property->addMultipleMediaFromRequest(['images'])
+                    ->each(function ($fileAdder) {
+                        $fileAdder->toMediaCollection('gallery');
+                    });
             }
         }
 
         return response()->json([
             "message" => "success",
-            200,
+            "status" => 200,
         ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -87,7 +90,7 @@ class PropertyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\Property  $property
      * @return \Illuminate\Http\Response
      */
