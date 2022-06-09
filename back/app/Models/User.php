@@ -52,16 +52,14 @@ class User extends Authenticatable  implements MustVerifyEmail, HasMedia
      * Cover image
      * @return HasOne
      */
-    public function avatar(){
-        return $this->hasOne(Media::class, 'id', 'avatar_id');
+    public function avatar(): HasOne
+    {
+        return $this->hasOne(Media::class, 'avatar_id', 'id');
     }
 
-    public function getAvatarUrlAttribute()
+
+    public function properties(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        if ($this->avatar)
-        {
-            return $this->avatar->getFullUrl();
-        }
-        return '';
+        return $this->hasMany(Property::class, 'user_id', 'id');
     }
 }
