@@ -24,9 +24,9 @@ class StorePropertyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'address' => ['required|min:3'],
+            'address' => ['required', 'min:3'],
             'description'  => ['required'],
-            'price'  => ['required|numeric'],
+            'price'  => ['required','numeric'],
         ];
     }
 }

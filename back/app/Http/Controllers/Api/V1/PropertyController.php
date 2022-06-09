@@ -7,6 +7,7 @@ use App\Http\Requests\StorePropertyRequest;
 use App\Models\Property;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PropertyController extends Controller
 {
@@ -67,8 +68,8 @@ class PropertyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Property  $property
-     * @return \Illuminate\Http\Response
+     * @param Property $property
+     * @return Response
      */
     public function show(Property $property)
     {
@@ -78,8 +79,8 @@ class PropertyController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Property  $property
-     * @return \Illuminate\Http\Response
+     * @param Property $property
+     * @return Response
      */
     public function edit(Property $property)
     {
@@ -89,20 +90,21 @@ class PropertyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param  \App\Models\Property  $property
-     * @return \Illuminate\Http\Response
+     * @param StorePropertyRequest $request
+     * @param Property $property
      */
-    public function update(Request $request, Property $property)
+    public function update(StorePropertyRequest $request, Property $property)
     {
-        //
+        return \response()->json([
+            "property" => $property->update($request->all()),
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Property  $property
-     * @return \Illuminate\Http\Response
+     * @param Property $property
+     * @return Response
      */
     public function destroy(Property $property)
     {
