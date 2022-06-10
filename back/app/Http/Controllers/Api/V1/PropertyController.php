@@ -8,6 +8,7 @@ use App\Models\Property;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class PropertyController extends Controller
 {
@@ -22,16 +23,6 @@ class PropertyController extends Controller
         return \response()->json([
             "property" => $property
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return JsonResponse
-     */
-    public function create(Request $request)
-    {
-        //
     }
 
     /**
@@ -77,21 +68,11 @@ class PropertyController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Property $property
-     * @return Response
-     */
-    public function edit(Property $property)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param StorePropertyRequest $request
      * @param Property $property
+     * @return JsonResponse
      */
     public function update(StorePropertyRequest $request, Property $property)
     {
@@ -108,6 +89,20 @@ class PropertyController extends Controller
      */
     public function destroy(Property $property)
     {
-        //
+        $property->delete();
+        return response(null, 204);
+    }
+
+    public function galleryUpdate(Request $request, $id)
+    {
+        $media = Media::find($id);
+        $property = Property::find($media->model_id);
+        $property->media()->delete($id);
+        if ($request->hasFile('images')) {
+            foreach ($request->images as $images) {
+                $property->addMedia($images)
+                    ->toMediaCollection('gallery');
+            }
+        }
     }
 }

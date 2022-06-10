@@ -17,6 +17,7 @@ Route::get('/', function  () {
 });
 
 Route::apiResource('property', PropertyController::class);
+Route::post('medias/{id}', [PropertyController::class, 'galleryUpdate']);
 
 Route::middleware(['auth', 'verified'])->get('/user', function (Request $request) {
     return $request->user();
