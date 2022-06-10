@@ -9,9 +9,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Exports\PropertyExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PropertyController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -93,16 +96,27 @@ class PropertyController extends Controller
         return response(null, 204);
     }
 
+    /**
+     * Remove all Gallery and Insert new
+     * @param Request $request
+     * @param $id
+     */
     public function galleryUpdate(Request $request, $id)
     {
         $media = Media::find($id);
         $property = Property::find($media->model_id);
         $property->media()->delete($id);
         if ($request->hasFile('images')) {
-            foreach ($request->images as $images) {
-                $property->addMedia($images)
-                    ->toMediaCollection('gallery');
-            }
+            $fileAdders = $property->addMultipleMediaFromRequest(['images'])
+                ->each(function ($fileAdder) {
+                    $fileAdder->toMediaCollection('gallery');
+                });
         }
     }
+
+    public function exportIntoExcel()
+    {
+        return Excel::download(new PropertyExport, 'propertyList.xlsx');
+    }
+
 }
