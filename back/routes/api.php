@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\PropertyController;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
@@ -14,7 +15,10 @@ Route::get('/', function  () {
         ]
     ];
 });
-Route::middleware('guest')->get('/user', function (Request $request) {
+
+Route::apiResource('property', PropertyController::class);
+
+Route::middleware(['auth', 'verified'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
