@@ -6,6 +6,17 @@
       :columns="columns"
       row-key="id"
     >
+      <template v-slot:top="props">
+        <div class="q-table__title">{{$t('propertyList')}}</div>
+        <q-space />
+        <q-btn size="sm" color="accent" dense @click="dialog.new_property = true" icon="add"  :label="$t('addProperty')" no-caps class="q-px-sm"/>
+        <q-btn
+          flat round dense
+          :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+          @click="props.toggleFullscreen"
+          class="q-ml-md"
+        />
+      </template>
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th auto-width />
@@ -39,10 +50,14 @@
         </q-tr>
       </template>
     </q-table>
+    <q-dialog v-model="dialog.new_property" persistent>
+      <new-property-vue @close="dialog.new_property = false"></new-property-vue>
+    </q-dialog>
   </div>
 </template>
 
 <script>
+import NewPropertyVue from 'src/components/dialogs/NewProperty.vue'
 import PropertyGalleryVue from '../components/PropertyGallery.vue'
 export default {
   setup () {
@@ -63,10 +78,14 @@ export default {
     }
   },
   components: {
-    PropertyGalleryVue
+    PropertyGalleryVue,
+    NewPropertyVue
   },
   data () {
     return {
+      dialog: {
+        new_property: false
+      }
     }
   },
   computed: {
@@ -94,6 +113,8 @@ export default {
         { name: 'description', align: 'left', label: 'Déscription', field: 'description', sortable: true }
       ]
     }
+  },
+  methods: {
   }
 }
 </script>

@@ -9,8 +9,8 @@ export const util = {
   },
   /**
    * Convert iso time to locale time
-   * 
-   * @param string isoTime 
+   *
+   * @param string isoTime
    */
   fromISOTime (isoTime) {
     let localDate = (new Date()).toISOString()
@@ -60,7 +60,8 @@ export const util = {
       message: message,
       color: 'secondary',
       position: 'top-right',
-      timeout: 3000
+      timeout: 3000,
+      icon: 'cloud_done'
     })
   },
   showError (message) {
