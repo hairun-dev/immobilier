@@ -1,14 +1,17 @@
 
 const routes = [
   {
+    path: '/',
+    redirect: '/fr'
+  },
+  {
     path: '/:lang',
-    name: 'home',
     component: () => import('src/layouts/FrontLayout.vue'),
     children: [
       {
         path: '',
         name: 'immobilier',
-        component: () => import('pages/BienImmobilier.vue')
+        component: () => import('src/pages/PropertyPage.vue')
       }
     ]
   },

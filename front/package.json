@@ -1,8 +1,8 @@
 {
   "name": "front",
   "version": "0.0.1",
-  "description": "Frontend of immobilier app",
-  "productName": "Immobilier",
+  "description": "Frontend of property app",
+  "productName": "Front Property",
   "author": "Hairun dev <hairun.dev@gmail.com>",
   "private": true,
   "scripts": {

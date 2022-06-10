@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div class="q-pa-md">
+    <div class="row">
+      <q-space></q-space>
+      <q-select dense :options="lang.options" v-model="lang.selected" outlined class="q-mb-md"></q-select>
+    </div>
     <router-view></router-view>
   </div>
 </template>
@@ -10,6 +14,23 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'FrontPage',
   components: {
+  },
+  data () {
+    return {
+      lang: {
+        options: [{
+          value: 'fr',
+          label: 'FR'
+        }, {
+          value: 'en',
+          label: 'EN'
+        }],
+        selected: {
+          value: 'fr',
+          label: 'FR'
+        }
+      }
+    }
   },
   methods: {
     switchLocale () {
@@ -25,6 +46,9 @@ export default defineComponent({
   watch: {
     '$route.params.lang' (val) {
       this.switchLocale()
+    },
+    'lang.selected' (val) {
+      this.$router.push(`/${val.value}`)
     }
   }
 })

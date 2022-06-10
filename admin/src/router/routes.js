@@ -2,7 +2,6 @@
 const routes = [
   {
     path: '/',
-    // redirect: { name: 'immobilier' }
     redirect: '/fr'
   },
   {
@@ -12,7 +11,7 @@ const routes = [
       {
         path: '',
         name: 'immobilier',
-        component: () => import('pages/BienImmobilier.vue')
+        component: () => import('src/pages/PropertyPage.vue')
       }
     ]
   },
