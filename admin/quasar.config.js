@@ -92,7 +92,7 @@ module.exports = configure(function (ctx) {
       server: {
         type: 'http'
       },
-      port: 8086,
+      port: 8088,
       open: true // opens browser window automatically
     },
 
@@ -160,9 +160,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: 'Immobilier',
-        short_name: 'Immobilier',
-        description: 'Frontend of immobilier app',
+        name: 'Administration of property',
+        short_name: 'Administration of property',
+        description: 'Administration of property',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -227,7 +227,7 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'front'
+        appId: 'admin'
       },
 
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain

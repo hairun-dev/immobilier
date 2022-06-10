@@ -1,18 +1,15 @@
 <template>
   <div>
     <router-view></router-view>
-    <!-- <bien-immobilier-vue></bien-immobilier-vue> -->
   </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
-// import BienImmobilierVue from './BienImmobilier.vue'
 
 export default defineComponent({
-  name: 'IndexPage',
+  name: 'AdminPage',
   components: {
-    // BienImmobilierVue
   },
   methods: {
     switchLocale () {
