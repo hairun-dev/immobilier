@@ -3,7 +3,7 @@ WORKDIR /admin
 
 COPY package*.json ./
 
-COPY quasar.conf.js ./
+COPY quasar.config.js ./
 
 COPY . .
 
