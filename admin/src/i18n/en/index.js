@@ -5,5 +5,6 @@ export default {
   cancel: 'Cancel',
   save: 'Save',
   addProperty: 'Add property',
-  add: 'Add'
+  add: 'Add',
+  login: 'Login'
 }

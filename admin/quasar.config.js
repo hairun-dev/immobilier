@@ -77,13 +77,14 @@ module.exports = configure(function (ctx) {
         chain.plugin('eslint-webpack-plugin')
           .use(ESLintPlugin, [{ extensions: ['js', 'vue'] }])
       },
-      env: ctx.dev
-        ? { // so on dev we'll have
-            API_BASE_URL: 'http://localhost:3000/api/v1'
-          }
-        : { // and on build (production):
-            API_BASE_URL: 'https://ipsy.otwoo.space/api/v1'
-          }
+      env: require('dotenv').config().parsed
+      // env: ctx.dev
+      //   ? { // so on dev we'll have
+      //       API_BASE_URL: 'http://localhost:3000/api/v1'
+      //     }
+      //   : { // and on build (production):
+      //       API_BASE_URL: 'https://ipsy.otwoo.space/api/v1'
+      //     }
 
     },
 

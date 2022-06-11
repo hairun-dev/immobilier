@@ -38,9 +38,17 @@ export default defineComponent({
       if (this.$i18n.locale !== locale) {
         this.$i18n.locale = locale
       }
+    },
+    addGoogleMapKey () {
+      const mapKey = `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}&libraries=places`
+      console.log('script', mapKey)
+      const mapScript = document.createElement('script')
+      mapScript.setAttribute('src', mapKey)
+      document.head.appendChild(mapScript)
     }
   },
   mounted () {
+    // this.addGoogleMapKey()
     this.switchLocale()
   },
   watch: {

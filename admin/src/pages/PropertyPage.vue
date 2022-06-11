@@ -109,7 +109,7 @@ export default {
           format: val => `${val}`,
           sortable: true
         },
-        { name: 'prix', align: 'right', label: this.$t('price'), field: 'prix', format: val => `${val} €`, sortable: true },
+        { name: 'prix', align: 'right', label: this.$t('price'), field: 'prix', format: val => `${Number(val).toLocaleString()} €`, sortable: true },
         { name: 'description', align: 'left', label: 'Déscription', field: 'description', sortable: true }
       ]
     }

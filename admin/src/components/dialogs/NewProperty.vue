@@ -21,6 +21,8 @@
           :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
 
+        <vue-google-autocomplete hidden id="map" classname="form-control" placeholder="Start typing" v-on:placechanged="getAddressData"></vue-google-autocomplete>
+
         <q-input
           v-model="price"
           type="number"
@@ -56,8 +58,11 @@
 
 <script>
 import { ref } from 'vue'
-
+import VueGoogleAutocomplete from 'vue-google-autocomplete'
 export default {
+  components: {
+    VueGoogleAutocomplete
+  },
   setup () {
     const address = ref(null)
     const price = ref(null)
@@ -79,7 +84,15 @@ export default {
       if (isValid) {
         console.log('valid')
       }
+    },
+    getAddressData (addressData, placeResultData, id) {
+      console.log('adr', addressData, placeResultData, id)
     }
+  },
+  computed: {
+    // thousandMilier () {
+
+    // }
   }
 }
 </script>
