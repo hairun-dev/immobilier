@@ -1,0 +1,41 @@
+version: '3.6'
+services:
+  admindev:
+    image: registry.gitlab.com/digitallforyou/immobilier/staging/admin:staging
+    restart: always
+    ports:
+      - 2054:80
+
+  frontdev:
+    image: registry.gitlab.com/digitallforyou/immobilier/staging/web:staging
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - 2055:80
+
+  strapidev:
+    image: registry.gitlab.com/digitallforyou/immobilier/staging/server:staging
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - 1339:1337
+
+  mysqldev:
+    image: mysql:latest
+    restart: always
+    ports:
+      - 3326:3306
+    env_file:
+      - .env
+    volumes:
+      - ./data:/var/lib/mysql
+
+  phpmyadmindev:
+    image: phpmyadmin:latest
+    restart: always  
+    env_file:
+      - .env
+    ports:
+      - 8080:80
