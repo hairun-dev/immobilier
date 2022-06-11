@@ -3,8 +3,6 @@ WORKDIR /admin
 
 COPY package*.json ./
 
-COPY quasar.config.js ./
-
 COPY . .
 
 RUN npm install
