@@ -1,76 +1,15 @@
 version: '3.6'
 services:
-  admin:
-    image: registry.gitlab.com/digitallforyou/funow/preprod/admin:preprod
+  admindev:
+    image: registry.gitlab.com/digitallforyou/immobilier/staging/admin:staging
     restart: always
-    labels:
-      traefik.frontend.rule: Host:immobilier-admin.hairun-technology.com
-      traefik.enable: true
-      traefik.port: 80
-      traefik.frontend.entryPoints: https,http
-      traefik.frontend.redirect.entryPoint: https
-    networks:
-      - funow
-
-  front:
-    image: registry.gitlab.com/digitallforyou/funow/preprod/web:preprod
-    env_file:
-      - .env-fo
-    restart: always
-    labels:
-      traefik.frontend.rule: Host:immobilier.hairun-technology.com
-      traefik.enable: true
-      traefik.port: 80
-      traefik.frontend.entryPoints: https,http
-      traefik.frontend.redirect.entryPoint: https
-    networks:
-      - funow
-
-
-  strapi:
-    image: registry.gitlab.com/digitallforyou/funow/preprod/server:preprod
-    env_file:
-      - .env
-    restart: always
-    labels:
-      traefik.frontend.rule: Host:immobilier-api.hairun-technology.com
-      traefik.enable: true
-      traefik.port: 1337
-      traefik.frontend.entryPoints: https,http
-      traefik.frontend.redirect.entryPoint: https
-    networks:
-      - funow
-
-  postgres:
-    image: postgres:12
-    restart: always
-    labels:
-      traefik.enable: false
     ports:
-      - 3363:5432
+      - 2054:80
+
+  frontdev:
+    image: registry.gitlab.com/digitallforyou/immobilier/staging/web:staging
     env_file:
       - .env
-    volumes:
-      - ./data:/var/lib/postgresql/data
-    networks:
-      - funow
-
-  pgadmin:
-    image: dpage/pgadmin4:4
-    restart: always  
-    env_file:
-      - .env
-    labels:
-      traefik.frontend.rule: Host:immobilier-phpmyadmin.hairun-technology.com
-      traefik.enable: true
-      traefik.port: 80
-      traefik.frontend.entryPoints: https,http
-      traefik.frontend.redirect.entryPoint: https
-    networks:
-      - funow
-
-networks:
-  funow:
-    external: 
-      name: traefik_funow-preprod
-
+    restart: always
+    ports:
+      - 2055:80
