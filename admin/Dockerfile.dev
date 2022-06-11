@@ -11,14 +11,14 @@ COPY . .
 # build stage
 FROM develop-stage as build-stage
 
-RUN yarn
+RUN yarn install
 
 RUN quasar build
 
 # étape de production
 FROM nginx:stable-alpine as production-stage
 
-COPY --from=build-stage /admin/dist /usr/share/nginx/html
+COPY --from=build-stage /admin/dist/spa /usr/share/nginx/html
 
 EXPOSE 80
 
