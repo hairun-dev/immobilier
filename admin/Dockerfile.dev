@@ -1,19 +1,24 @@
-FROM node:lts-alpine as build-stage
+FROM node:13.14-alpine as develop-stage
 
 WORKDIR /admin
 
 COPY package*.json ./
 
-RUN npm install
+RUN yarn global add @quasar/cli
 
 COPY . .
 
-RUN npm run build
+# build stage
+FROM develop-stage as build-stage
+
+RUN yarn
+
+RUN quasar build
 
 # étape de production
 FROM nginx:stable-alpine as production-stage
 
-COPY --from=build-stage /admin/dist /usr/share/nginx/html
+COPY --from=build-stage /front/dist /usr/share/nginx/html
 
 EXPOSE 80
 
