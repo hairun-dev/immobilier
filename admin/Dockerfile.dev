@@ -1,21 +1,24 @@
-FROM node:latest as build-stage
+FROM node:14-alpine as develop-stage
+
 WORKDIR /admin
 
 COPY package*.json ./
 
+RUN yarn global add @quasar/cli
+
 COPY . .
 
-RUN npm install
+# build stage
+FROM develop-stage as build-stage
 
-RUN npm install -g @vue/cli
-
-RUN npm install -g @quasar/cli 
+RUN yarn
 
 RUN quasar build
 
-FROM nginx as production-stage
+# étape de production
+FROM nginx:stable-alpine as production-stage
 
-COPY --from=build-stage /admin/dist/spa /usr/share/nginx/html
+COPY --from=build-stage /admin/dist/soa /usr/share/nginx/html
 
 EXPOSE 80
 
