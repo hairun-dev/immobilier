@@ -15,11 +15,11 @@ class UserController extends Controller
      *
      * @return JsonResponse
      */
-    public function userList(): JsonResponse
+    public function index(): JsonResponse
     {
-        $property = User::with('avatar')->get();
+        $users = User::with('avatar')->get();
         return \response()->json([
-            "property" => $property
+            "users" => $users
         ]);
     }
 

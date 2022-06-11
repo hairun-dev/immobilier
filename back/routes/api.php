@@ -20,7 +20,6 @@ Route::get('/', function  () {
 
 Route::apiResource('property', PropertyController::class);
 Route::apiResource('user', UserController::class);
-Route::get('user-list', [UserController::class, 'userList']);
 Route::post('medias/{id}', [PropertyController::class, 'galleryUpdate']);
 Route::get('export-excel', [PropertyController::class, 'exportIntoExcel']);
 Route::put('/user/update', [UserController::class, 'update'])

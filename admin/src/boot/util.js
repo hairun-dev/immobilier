@@ -58,7 +58,7 @@ export const util = {
   showMessage: (message) => {
     Notify.create({
       message: message,
-      color: 'secondary',
+      color: 'green',
       position: 'top-right',
       timeout: 3000,
       icon: 'cloud_done'
@@ -69,7 +69,7 @@ export const util = {
       message: message,
       timeout: 3000,
       icon: 'report_problem',
-      color: 'positive',
+      color: 'red',
       position: 'top-right'
     })
   },

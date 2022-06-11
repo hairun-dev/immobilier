@@ -5,6 +5,11 @@ const routes = [
     redirect: '/fr'
   },
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('src/pages/LoginPage.vue')
+  },
+  {
     path: '/:lang',
     component: () => import('src/layouts/AdminLayout.vue'),
     children: [
