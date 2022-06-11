@@ -11,6 +11,8 @@ use Illuminate\Http\Response;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Exports\PropertyExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Library\Services;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PropertyController extends Controller
 {
@@ -20,7 +22,7 @@ class PropertyController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $property = Property::all();
         return \response()->json([
@@ -43,20 +45,13 @@ class PropertyController extends Controller
             'user_id' => $request->get('user_id'),
         ]);
 
-        if ($property)
-        {
-            if ($request->hasFile('images')) {
-                $fileAdders = $property->addMultipleMediaFromRequest(['images'])
-                    ->each(function ($fileAdder) {
-                        $fileAdder->toMediaCollection('gallery');
-                    });
-            }
+        if ($property) {
+            Services\UploadImage::uploadMultipleImages('images', $request, $property);
         }
 
         return response()->json([
             "message" => "success",
-            "status" => 200,
-        ]);
+        ], 201);
     }
 
     /**
@@ -77,11 +72,11 @@ class PropertyController extends Controller
      * @param Property $property
      * @return JsonResponse
      */
-    public function update(StorePropertyRequest $request, Property $property)
+    public function update(StorePropertyRequest $request, Property $property): JsonResponse
     {
         return \response()->json([
             "property" => $property->update($request->all()),
-        ]);
+        ],202 );
     }
 
     /**
@@ -90,7 +85,7 @@ class PropertyController extends Controller
      * @param Property $property
      * @return Response
      */
-    public function destroy(Property $property)
+    public function destroy(Property $property): Response
     {
         $property->delete();
         return response(null, 204);
@@ -100,21 +95,22 @@ class PropertyController extends Controller
      * Remove all Gallery and Insert new
      * @param Request $request
      * @param $id
+     * @return JsonResponse
      */
-    public function galleryUpdate(Request $request, $id)
+    public function galleryUpdate(Request $request, $id): JsonResponse
     {
         $media = Media::find($id);
         $property = Property::find($media->model_id);
-        $property->media()->delete($id);
-        if ($request->hasFile('images')) {
-            $fileAdders = $property->addMultipleMediaFromRequest(['images'])
-                ->each(function ($fileAdder) {
-                    $fileAdder->toMediaCollection('gallery');
-                });
+        if($property){
+            $property->media()->delete($id);
+            Services\UploadImage::uploadMultipleImages('images', $request, $property);
         }
+        return \response()->json([
+            "message" => 'success',
+        ]);
     }
 
-    public function exportIntoExcel()
+    public function exportIntoExcel(): BinaryFileResponse
     {
         return Excel::download(new PropertyExport, 'propertyList.xlsx');
     }

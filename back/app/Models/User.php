@@ -54,7 +54,7 @@ class User extends Authenticatable  implements MustVerifyEmail, HasMedia
      */
     public function avatar(): HasOne
     {
-        return $this->hasOne(Media::class, 'avatar_id', 'id');
+        return $this->hasOne(Media::class, 'id', 'avatar_id');
     }
 
 

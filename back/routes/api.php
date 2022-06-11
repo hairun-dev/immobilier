@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\V1\PropertyController;
+use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Controllers\ProfileInformationController;
 
 Route::get('/', function  () {
     return [
@@ -17,12 +19,13 @@ Route::get('/', function  () {
 });
 
 Route::apiResource('property', PropertyController::class);
+Route::apiResource('user', UserController::class);
+Route::get('user-list', [UserController::class, 'userList']);
 Route::post('medias/{id}', [PropertyController::class, 'galleryUpdate']);
 Route::get('export-excel', [PropertyController::class, 'exportIntoExcel']);
-
-Route::middleware(['auth', 'verified'])->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::put('/user/update', [UserController::class, 'update'])
+    ->middleware(['guest:'.config('fortify.guard')])
+    ->name('user-profile-information.update');
 
 Route::get('/register-retry', function(){
     Cookie::queue(Cookie::forget(strtolower(str_replace(' ', '_', config('app.name'))) . '_session'));;

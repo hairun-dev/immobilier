@@ -42,7 +42,7 @@ class CreateNewUser implements CreatesNewUsers
         $avatar = User::find($userId );
         if ($avatar )
         {
-            $uploaded = $avatar->addMedia(request()->file('avatar'))->toMediaCollection('images');
+            $uploaded = $avatar->addMedia(request()->file('avatar'))->toMediaCollection('avatar');
             if ($uploaded)
             {
                 $avatar->avatar_id = $uploaded->id;
