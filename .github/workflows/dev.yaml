@@ -8,37 +8,37 @@ on:
     branches:
       - develop
   
-  jobs:
-    deployFront:
-      runs-on: ubuntu-latest
-      if: github.event_name == 'push'
+jobs:
+  deployFront:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
 
-      steps:
-        - name: Deploy to Serveur Hairun via SSH action
-          uses: appleboy/ssh-action@v0.1.3
-          with:
-            HOST: ${{ secrets.HOST }}
-            USERNAME: ${{ secrets.USERNAME }}
-            KEY: ${{ secrets.SSHKEY }}
-          script: |
-            cd /var/www/html/dev/immobilier
-            docker-compose -f docker-compose.staging.yaml up -d --build
+    steps:
+      - name: Deploy to Serveur Hairun via SSH action
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          HOST: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          KEY: ${{ secrets.SSHKEY }}
+        script: |
+          cd /var/www/html/dev/immobilier
+          docker-compose -f docker-compose.staging.yaml up -d --build
 
-    deployApi:
-      runs-on: ubuntu-latest
-      if: github.event_name == 'push'
+  deployApi:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
 
-      steps:
-        - name: Deploy to Serveur Hairun via SSH action
-          uses: appleboy/ssh-action@v0.1.3
-          with:
-            HOST: ${{ secrets.HOST }}
-            USERNAME: ${{ secrets.USERNAME }}
-            KEY: ${{ secrets.SSHKEY }}
-          script: |
-            cd /var/www/html/dev/immobilier/back
-            git checkout develop
-            git pull
-            composer install -n
-            php artisan optimize:clear 
+    steps:
+      - name: Deploy to Serveur Hairun via SSH action
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          HOST: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          KEY: ${{ secrets.SSHKEY }}
+        script: |
+          cd /var/www/html/dev/immobilier/back
+          git checkout develop
+          git pull
+          composer install -n
+          php artisan optimize:clear 
 
