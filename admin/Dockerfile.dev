@@ -18,7 +18,7 @@ RUN quasar build
 # étape de production
 FROM nginx:stable-alpine as production-stage
 
-COPY --from=build-stage /admin/dist/soa /usr/share/nginx/html
+COPY --from=build-stage /admin/dist/spa /usr/share/nginx/html
 
 EXPOSE 80
 
