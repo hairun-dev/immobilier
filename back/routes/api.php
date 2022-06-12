@@ -22,9 +22,7 @@ Route::apiResource('property', PropertyController::class);
 Route::apiResource('user', UserController::class);
 Route::post('medias/{id}', [PropertyController::class, 'galleryUpdate']);
 Route::get('export-excel', [PropertyController::class, 'exportIntoExcel']);
-Route::put('/user/update', [UserController::class, 'update'])
-    ->middleware(['guest:'.config('fortify.guard')])
-    ->name('user-profile-information.update');
+Route::put('/user/update/{id}', [UserController::class, 'update']);
 
 Route::get('/register-retry', function(){
     Cookie::queue(Cookie::forget(strtolower(str_replace(' ', '_', config('app.name'))) . '_session'));;

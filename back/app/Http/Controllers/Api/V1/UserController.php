@@ -3,10 +3,17 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 
 class UserController extends Controller
 {
@@ -23,6 +30,52 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function update(UserRequest $request, $id): JsonResponse
+    {
+        $user = User::find($id);
+        if($user){
+            if ($request->email !== $user->email &&
+                $user instanceof MustVerifyEmail) {
+                $this->updateVerifiedUser($user, $request->all());
+            } else {
+                return \response()->json([
+                    "messages" => "Existing user"
+                ]);
+            }
+            return \response()->json([
+                "update" => "success"
+            ]);
+        }else{
+            return \response()->json([
+                "no-user" => "user-not-found"
+            ]);
+        }
+    }
+
+    /**
+     * Update the given verified user's profile information.
+     *
+     * @param  mixed  $user
+     * @param  array  $input
+     * @return void
+     */
+    protected function updateVerifiedUser($user, array $input)
+    {
+        $user->forceFill([
+            'name' => $input['name'],
+            'email' => $input['email'],
+            'email_verified_at' => null,
+        ])->save();
+
+        $user->sendEmailVerificationNotification();
+    }
+    
     /**
      * Remove the specified resource from storage.
      *
