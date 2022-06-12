@@ -22,6 +22,8 @@ jobs:
           KEY: ${{ secrets.SSHKEY }}
           script: |
             cd /var/www/html/dev/immobilier
+            git checkout develop
+            git pull
             docker-compose -f docker-compose.staging.yaml up -d --build
 
   deployApi:
