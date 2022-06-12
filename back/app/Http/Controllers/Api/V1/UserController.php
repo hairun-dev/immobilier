@@ -36,17 +36,29 @@ class UserController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function update(UserRequest $request, $id): JsonResponse
+    public function update(Request $request, $id): JsonResponse
     {
         $user = User::find($id);
         if($user){
+            Validator::make($request->all(), [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => [
+                    'required',
+                    'string',
+                    'email',
+                    'max:255',
+                    Rule::unique('users')->ignore($user->id),
+                ],
+            ])->validateWithBag('updateProfileInformation');
+
             if ($request->email !== $user->email &&
                 $user instanceof MustVerifyEmail) {
                 $this->updateVerifiedUser($user, $request->all());
             } else {
-                return \response()->json([
-                    "messages" => "Existing user"
-                ]);
+                $user->forceFill([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                ])->save();
             }
             return \response()->json([
                 "update" => "success"
@@ -75,7 +87,7 @@ class UserController extends Controller
 
         $user->sendEmailVerificationNotification();
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
