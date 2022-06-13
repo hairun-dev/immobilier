@@ -60,6 +60,7 @@ const injectData = (options, data, json = null) => {
         options.headers = {}
       }
       options.headers['Content-Type'] = json
+      options.headers['XSRF-TOKEN'] = 'eyJpdiI6IjVYcWpKZlo1d3A1R3NZWElKUTRYUkE9PSIsInZhbHVlIjoiT3FkQm5laG56bkFUMEwxNzJMa3VIVnFCZ0J1TFBiUDJReFdvQlB1ZjJBL0g1UEpQdUNUK083LzdZaDR1M0E3azBHV0tsay81VVYreGdWS1BZN3U4SzNKUEZZbW1QNUk4OTF5RzRYK2pPenRSa2ZoVW9za2pTa3ZVUFVtbk02QXQiLCJtYWMiOiI5Njc5MGI3ZWEyMzNjMmEyNzQ1ZDU0Y2FiZGZhNGMxOWQ3YmRjODQ3NTk4M2FmYjY5MmMwZDc4ZmE5OTBiNzU4IiwidGFnIjoiIn0%3D'
     }
   }
   return options

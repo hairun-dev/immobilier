@@ -41,6 +41,10 @@
             </template>
           </q-input>
         </q-form>
+        <div class="flex">
+          <q-space></q-space>
+          <div class="register" @click="dialog.new_user = true">Register?</div>
+        </div>
       </q-card-section>
 
       <q-separator />
@@ -49,15 +53,22 @@
         <q-btn flat :label="$t('login')" color="primary" @click="onLogin" />
       </q-card-actions>
     </q-card>
+    <q-dialog v-model="dialog.new_user" position="top">
+      <new-user-vue></new-user-vue>
+    </q-dialog>
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
+import NewUserVue from 'src/components/dialogs/NewUser.vue'
 export default {
+  components: {
+    NewUserVue
+  },
   setup () {
-    const email = ref(null)
-    const password = ref(null)
+    const email = ref('harilanto@hairun-technology.com')
+    const password = ref('azert123')
     const isVisible = ref(false)
 
     return {
@@ -66,23 +77,69 @@ export default {
       isVisible
     }
   },
+  data () {
+    return {
+      dialog: {
+        new_user: false
+      }
+    }
+  },
   methods: {
     async onLogin () {
       const isValid = await this.$refs.myForm.validate()
       if (isValid) {
-        if (this.email === 'admin' && this.password === 'admin') {
-          this.onLogged()
-        } else {
-          this.$util.showError('Authentification error')
+        this.$util.showLoading()
+        const payload = {
+          email: this.email,
+          password: this.password
         }
+        this.$back.post('api/v1/login', payload)
+          .then(res => {
+            console.log('res', res.headers)
+          })
+          .catch(e => {
+            console.log('error', e)
+          })
+          .then(() => {
+            this.$util.hideLoading()
+          })
       }
     },
-    onLogged () {
+    onLogged (user) {
+      this.$q.localStorage.set('user', user)
       this.$router.push({ name: 'immobilier', params: { lang: 'en' } })
+    },
+    checkToken () {
+      this.$util.showLoading()
+      this.$back.get('sanctum/csrf-cookie')
+        .then(res => {
+          console.log('res', res)
+        })
+        .catch(e => {
+          console.log('error', e)
+        })
+        .then(() => {
+          this.$util.hideLoading()
+        })
+    },
+    getCookie (name) {
+      if (!document.cookie) {
+        return null
+      }
+      const xsrfCookies = document.cookie.split(';')
+        .map(c => c.trim())
+        .filter(c => c.startsWith(name + '='))
+
+      if (xsrfCookies.length === 0) {
+        return null
+      }
+      return decodeURIComponent(xsrfCookies[0].split('=')[1])
     }
   },
   mounted () {
-    console.log('VUE_APP_GOOGLE_API_KEY', process.env.VUE_APP_GOOGLE_API_KEY)
+    // this.checkToken()
+    // console.log('getCook', this.getCookie('XSRF-TOKEN'))
+    console.log('doc', document.cookie)
   }
 }
 </script>
@@ -93,7 +150,13 @@ export default {
   display: flex
   align-items: center
   justify-content: center
+  background-color: grey
 
   .card
     min-width: 400px
+
+.register
+  cursor: pointer
+  color: $primary
+  font-style: italic
 </style>
