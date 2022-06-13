@@ -1,4 +1,4 @@
-name: Build Containers for Prod & Push to Dockerhub
+name: Deploy to Hairun Server
 
 on:
   pull_request:
