@@ -1,8 +1,4 @@
-FROM node:14-alpine as develop-stage
-
-ARG GOOGLE_API_KEY
-ARG API_BASE_URL
-ARG API_BASE_URL_V1
+FROM node:16.13.1-alpine as develop-stage
 
 WORKDIR /admin
 

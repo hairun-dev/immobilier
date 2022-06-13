@@ -11,7 +11,7 @@ COPY . .
 # build stage
 FROM develop-stage as build-stage
 
-RUN yarn
+RUN yarn install
 
 RUN quasar build
 
