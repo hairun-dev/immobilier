@@ -8,7 +8,7 @@
 
     <q-card-section style="max-height: 50vh" class="scroll">
       <q-form
-        @submit="onAdd"
+        @submit="onSave"
         class="q-gutter-md"
         ref="myForm"
       >
@@ -16,19 +16,17 @@
           v-model="address"
           label="Address *"
           lazy-rules
-          dense
           outlined
           :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
 
-        <vue-google-autocomplete hidden id="map" classname="form-control" placeholder="Start typing" v-on:placechanged="getAddressData"></vue-google-autocomplete>
+        <!-- <vue-google-autocomplete hidden id="map" classname="form-control" placeholder="Start typing" v-on:placechanged="getAddressData"></vue-google-autocomplete> -->
 
         <q-input
           v-model="price"
           type="number"
           label="Price *"
           lazy-rules
-          dense
           outlined
           :rules="[
             val => val !== null && val !== '' || 'Please type the price',
@@ -40,7 +38,6 @@
           v-model="description"
           label="Description *"
           lazy-rules
-          dense
           outlined
           :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
@@ -51,27 +48,37 @@
 
     <q-card-actions align="right">
       <q-btn flat :label="$t('cancel')" color="primary" @click="$emit('close')" />
-      <q-btn flat :label="$t('add')" color="primary" @click="onAdd" />
+      <q-btn :label="$t('add')" color="primary" @click="onSave" />
     </q-card-actions>
   </q-card>
 </template>
 
 <script>
 import { ref } from 'vue'
-import VueGoogleAutocomplete from 'vue-google-autocomplete'
+// import VueGoogleAutocomplete from 'vue-google-autocomplete'
 export default {
   components: {
-    VueGoogleAutocomplete
+    // VueGoogleAutocomplete
   },
-  setup () {
+  props: ['data'],
+  setup (props) {
+    const id = ref(null)
     const address = ref(null)
     const price = ref(null)
     const description = ref(null)
+    const updateValue = data => {
+      id.value = data.id
+      address.value = data.adresse
+      price.value = data.prix
+      description.value = data.description
+    }
 
     return {
+      id,
       address,
       price,
-      description
+      description,
+      updateValue
     }
   },
   data () {
@@ -79,20 +86,64 @@ export default {
     }
   },
   methods: {
-    async onAdd () {
+    async onSave () {
       const isValid = await this.$refs.myForm.validate()
       if (isValid) {
         console.log('valid')
+        // update
+        if (this.data) {
+          this.addProperty()
+        } else {
+          this.updateProperty()
+        }
       }
     },
     getAddressData (addressData, placeResultData, id) {
       console.log('adr', addressData, placeResultData, id)
+    },
+    addProperty () {
+      const payload = {
+        adresse: this.address,
+        prix: this.price,
+        description: this.description
+      }
+      this.$util.showLoading()
+      this.$back.post('api/v1/property', payload)
+        .then(res => {
+          console.log('res', res)
+        })
+        .catch(e => {
+          console.log('ERROR ON ADD PROPERTY', e)
+        })
+        .then(() => {
+          this.$util.hideLoading()
+        })
+    },
+    updateProperty () {
+      const payload = {
+        adresse: this.address,
+        prix: this.price,
+        description: this.description
+      }
+      this.$util.showLoading()
+      this.$back.post(`api/v1/user/update/${this.id}`, payload)
+        .then(res => {
+          console.log('res', res)
+        })
+        .catch(e => {
+          console.log('ERROR ON UPDATE USER', e)
+        })
+        .then(() => {
+          this.$util.hideLoading()
+        })
+    }
+  },
+  mounted () {
+    if (this.data) {
+      this.updateValue(this.data)
     }
   },
   computed: {
-    // thousandMilier () {
-
-    // }
   }
 }
 </script>

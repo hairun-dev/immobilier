@@ -6,5 +6,6 @@ export default {
   save: 'Save',
   addProperty: 'Add property',
   add: 'Add',
-  login: 'Login'
+  login: 'Login',
+  registerPage: 'Register page'
 }

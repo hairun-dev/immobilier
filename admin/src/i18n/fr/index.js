@@ -6,5 +6,6 @@ export default {
   save: 'Enregistrer',
   addProperty: 'Ajouter bien',
   add: 'Ajouter',
-  login: 'Se connecter'
+  login: 'Se connecter',
+  registerPage: "Page d'enregistrement"
 }
