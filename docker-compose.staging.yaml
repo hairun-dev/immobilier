@@ -1,16 +1,10 @@
 version: '3.6'
 services:
   admindev:
-    build:       
-      args:
-        GOOGLE_API_KEY: ${GOOGLE_API_KEY}
-        API_BASE_URL: ${API_BASE_URL}
-        API_BASE_URL_V1: ${API_BASE_URL_V1}
+    build:
       context: ./admin
       dockerfile: Dockerfile.dev
     restart: always
-    env_file:
-      - .env
     ports:
       - 2054:80
 
@@ -18,8 +12,6 @@ services:
     build: 
       context: ./front
       dockerfile: Dockerfile.dev
-    env_file:
-      - .env
     restart: always
     ports:
       - 2055:80
