@@ -137,7 +137,7 @@ export default {
     },
     onSuccess () {
       this.dialog.new_user = false
-      this.$util.showMessage('Utilisateur ajouté avec succées')
+      this.$util.showMessage('Utilisateur ajouté avec succèes')
     }
   },
   mounted () {

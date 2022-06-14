@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <div class="row">
       <q-space></q-space>
-      <q-btn class="q-mb-md" no-caps size="sm" @click="$util.openPick('image')">+ Ajouter photo</q-btn>
+      <!-- <q-btn class="q-mb-md" no-caps size="sm" @click="$util.openPick('image')">+ Ajouter photo</q-btn> -->
     </div>
     <q-carousel
       v-model="slide"

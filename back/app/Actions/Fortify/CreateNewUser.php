@@ -49,6 +49,6 @@ class CreateNewUser implements CreatesNewUsers
                 $avatar->save();
             }
         }
-
+        return  $user ;
     }
 }

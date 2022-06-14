@@ -19,9 +19,7 @@
           outlined
           :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
-
-        <!-- <vue-google-autocomplete hidden id="map" classname="form-control" placeholder="Start typing" v-on:placechanged="getAddressData"></vue-google-autocomplete> -->
-
+        <!-- <vue-google-autocomplete ref="adress" country="sg" id="map" classname="form-control" placeholder="Adresse" v-on:placechanged="getAddressData"></vue-google-autocomplete> -->
         <q-input
           v-model="price"
           type="number"
@@ -43,8 +41,8 @@
         />
       </q-form>
     </q-card-section>
-    <q-btn v-if="photos[0]" class="q-ml-md" no-caps size="sm" @click="$util.openPick('filePhoto')">Modifier photo</q-btn>
-    <q-scroll-area style="height: 150px; max-width: 400px;" v-if="photos[0]">
+    <q-btn class="q-ml-md" no-caps size="sm" @click="$util.openPick('filePhoto')">+Ajouter photo</q-btn>
+    <q-scroll-area style="height: 120px; max-width: 400px;">
       <div class="photos row no-wrap">
         <div class="photo" v-for="(it, idx) in photos" :key="idx">
           <div class="x" @click="removePhoto(idx)">x</div>
@@ -87,7 +85,6 @@ export default {
       photos.value.push(photo)
     }
     const removePhoto = idx => {
-      console.log('remove', idx)
       photos.value.splice(idx, 1)
     }
 
@@ -105,6 +102,7 @@ export default {
   },
   data () {
     return {
+      adress: ''
     }
   },
   methods: {
@@ -194,6 +192,10 @@ export default {
 <style lang="sass" scoped>
 .newProperty
   min-width: 400px
+
+  .form-control
+    width: 100%
+    padding: 5px
 
   .photos
     height: 100px
