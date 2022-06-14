@@ -20,7 +20,7 @@ const injectAuthToken = (options, authNeeded = 'jwt') => {
 const jsonToFormDataConverter = (json) => {
   const formData = new FormData()
   for (const key in json) {
-    console.log('append', json[key])
+    // console.log('append', json[key])
     formData.append(key, json[key])
   }
   return formData
@@ -87,6 +87,7 @@ const createAxiosResponseInterceptor = () => {
     (response) => {
       return response.data
     }, async (error) => {
+      console.log('error message', error)
       util.showError(error.response.data.message)
       return Promise.reject(error)
     }

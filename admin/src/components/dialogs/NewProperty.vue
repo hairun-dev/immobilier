@@ -131,8 +131,11 @@ export default {
         address: this.address,
         price: parseInt(this.price),
         description: this.description,
-        images: this.photos.map(it => it.file),
+        // images: this.photos.map(it => it.file),
         user_id: 1
+      }
+      for (let i = 0; i < this.photos.length; i++) {
+        payload[`image[${i}]`] = this.photos[i].file
       }
       console.log('data', payload)
       this.$util.showLoading()

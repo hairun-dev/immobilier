@@ -150,8 +150,10 @@ export default {
         email: this.email,
         password: this.password,
         password_confirmation: this.password2,
-        avatar: this.$util.convertMultipartFile(this.avatar.file)
+        avatar: this.avatar.file
+        // avatar: this.$util.convertMultipartFile(this.avatar.file)
       }
+      console.log('file', payload)
       this.$util.showLoading()
       this.$back.post('api/v1/register', payload)
         .then(res => {
