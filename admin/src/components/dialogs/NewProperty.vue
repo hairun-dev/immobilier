@@ -43,8 +43,8 @@
         />
       </q-form>
     </q-card-section>
-    <q-btn class="q-ml-md" no-caps size="sm" @click="$util.openPick('filePhoto')">+ Ajouter photo</q-btn>
-    <q-scroll-area style="height: 150px; max-width: 400px;">
+    <q-btn v-if="photos[0]" class="q-ml-md" no-caps size="sm" @click="$util.openPick('filePhoto')">Modifier photo</q-btn>
+    <q-scroll-area style="height: 150px; max-width: 400px;" v-if="photos[0]">
       <div class="photos row no-wrap">
         <div class="photo" v-for="(it, idx) in photos" :key="idx">
           <div class="x" @click="removePhoto(idx)">x</div>
@@ -79,8 +79,8 @@ export default {
     const photos = ref([])
     const updateValue = data => {
       id.value = data.id
-      address.value = data.adresse
-      price.value = data.prix
+      address.value = data.address
+      price.value = data.price
       description.value = data.description
     }
     const addPhoto = photo => {
@@ -111,14 +111,14 @@ export default {
     async onSave () {
       const isValid = await this.$refs.myForm.validate()
       if (isValid) {
-        if (!this.photos[0]) {
-          this.$util.showError('Veuillez ajouter au moins un photo')
-          return
-        }
         // update
         if (this.data) {
           this.updateProperty()
         } else {
+          if (!this.photos[0]) {
+            this.$util.showError('Veuillez ajouter au moins un photo')
+            return
+          }
           this.addProperty()
         }
       }
@@ -153,12 +153,12 @@ export default {
     },
     updateProperty () {
       const payload = {
-        adresse: this.address,
-        prix: this.price,
+        address: this.address,
+        price: this.price,
         description: this.description
       }
       this.$util.showLoading()
-      this.$back.post(`api/v1/user/update/${this.id}`, payload)
+      this.$back.put(`api/v1/property/${this.id}`, payload)
         .then(res => {
           this.$emit('refresh')
         })

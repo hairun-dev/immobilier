@@ -11,8 +11,8 @@
       <q-btn class="q-mr-sm" size="sm" color="grey" dense icon="edit" @click="handleNewUser(true)" />
       <q-btn size="sm" color="red" dense icon="delete" @click="handleConfirmation(true)" />
     </div>
-    <q-dialog v-model="dialogNewUser" position="top">
-      <new-user-vue :data="data"></new-user-vue>
+    <q-dialog v-model="dialogNewUser" position="top" persistent>
+      <new-user-vue :data="data" @close="handleNewUser(false)" @success="onSuccess"></new-user-vue>
     </q-dialog>
     <q-dialog v-model="dialogConfirmation" persistent>
       <delete-confirm-vue message="Voulez-vous supprimer cet utilisateur?" @ok="onDelete" @close="handleConfirmation(false)"></delete-confirm-vue>
@@ -76,6 +76,10 @@ export default {
         .then(() => {
           this.$util.hideLoading()
         })
+    },
+    onSuccess () {
+      this.handleNewUser(false)
+      this.$emit('refresh')
     }
   },
   computed: {

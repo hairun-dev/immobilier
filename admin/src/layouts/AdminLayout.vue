@@ -1,15 +1,15 @@
 <template>
   <div class="boxPageAdmin">
     <div class="header">
-      <div @click="onNavClicked('user')" class="btnNav" :class="selected === 'user' ? 'selected' : ''">Utilsateur</div>
-      <div @click="onNavClicked('bien')" class="btnNav" :class="selected === 'bien' ? 'selected' : ''">Bien immobilier</div>
+      <div @click="onNavClicked('user')" class="btnNav" :class="selected === 'user' ? 'selected' : ''">{{$t('user')}}</div>
+      <div @click="onNavClicked('bien')" class="btnNav" :class="selected === 'bien' ? 'selected' : ''">{{$t('property')}}</div>
       <q-space></q-space>
       <q-select dense :options="lang.options" v-model="lang.selected" outlined class="q-mr-sm"></q-select>
       <img @click="dialogLogout = true" class="img-logout" src="power-off.png" alt="">
     </div>
     <router-view></router-view>
     <q-dialog v-model="dialogLogout">
-      <confirmation-vue @close="dialogLogout = false" message="Voulez-vous vraiment deconnecter?"></confirmation-vue>
+      <confirmation-vue @close="dialogLogout = false" message="Voulez-vous vraiment deconnecter?" @ok="onDeconnexion"></confirmation-vue>
     </q-dialog>
   </div>
 </template>
@@ -34,8 +34,8 @@ export default defineComponent({
           label: 'EN'
         }],
         selected: {
-          value: 'fr',
-          label: 'FR'
+          value: 'en',
+          label: 'EN'
         }
       },
       selected: 'user',
@@ -70,6 +70,24 @@ export default defineComponent({
           lang: this.$i18n.locale
         }
       })
+    },
+    onDeconnexion () {
+      this.$util.showLoading()
+      this.$back.post('api/v1/logout')
+        .then(res => {
+          console.log('logout')
+        })
+        .catch(e => {
+          console.log('ERROR ON LOGOUT', e)
+        })
+        .then(() => {
+          this.dialogLogout = false
+          this.$q.localStorage.clear()
+          this.$util.hideLoading()
+          this.$router.push({
+            name: 'login'
+          })
+        })
     }
   },
   mounted () {
@@ -81,8 +99,8 @@ export default defineComponent({
     '$route.params.lang' (val) {
       this.switchLocale()
     },
-    'lang.selected' (val) {
-      this.$router.push(`/${val.value}`)
+    'lang.selected' (val, old) {
+      this.$router.push(`${this.$route.fullPath}`.replace(old.value, val.value))
     }
   }
 })

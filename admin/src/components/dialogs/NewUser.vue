@@ -131,15 +131,14 @@ export default {
     async onRegister () {
       const isValid = await this.$refs.myForm.validate()
       if (isValid) {
-        if (!this.avatar.file) {
-          this.$util.showError('Veuillez selectionner votre photo de profil')
-          return
-        }
-        console.log('valid')
         // update
         if (this.data) {
           this.updateUser()
         } else {
+          if (!this.avatar.file) {
+            this.$util.showError('Veuillez selectionner votre photo de profil')
+            return
+          }
           this.addUser()
         }
       }
@@ -151,13 +150,11 @@ export default {
         password: this.password,
         password_confirmation: this.password2,
         avatar: this.avatar.file
-        // avatar: this.$util.convertMultipartFile(this.avatar.file)
       }
-      console.log('file', payload)
       this.$util.showLoading()
       this.$back.post('api/v1/register', payload)
         .then(res => {
-          console.log('res', res)
+          this.$emit('success')
         })
         .catch(e => {
           console.log('ERROR ON ADD USER', e)
@@ -172,9 +169,9 @@ export default {
         email: this.email
       }
       this.$util.showLoading()
-      this.$back.post(`api/v1/user/update/${this.id}`, payload)
+      this.$back.put(`api/v1/user/update/${this.id}`, payload)
         .then(res => {
-          console.log('res', res)
+          this.$emit('success')
         })
         .catch(e => {
           console.log('ERROR ON UPDATE USER', e)
@@ -186,7 +183,6 @@ export default {
   },
   mounted () {
     if (this.data) {
-      console.log('this.data')
       this.updateValue(this.data)
     }
   },
@@ -198,7 +194,6 @@ export default {
           file: val,
           binary
         })
-        console.log('avatar', this.avatar.file)
       }
     }
   }

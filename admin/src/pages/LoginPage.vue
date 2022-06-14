@@ -53,8 +53,8 @@
         <q-btn flat :label="$t('login')" color="primary" @click="onLogin" />
       </q-card-actions>
     </q-card>
-    <q-dialog v-model="dialog.new_user" position="top">
-      <new-user-vue></new-user-vue>
+    <q-dialog v-model="dialog.new_user" position="top" persistent>
+      <new-user-vue @close="dialog.new_user = false" @success="onSuccess"></new-user-vue>
     </q-dialog>
   </div>
 </template>
@@ -114,7 +114,6 @@ export default {
       this.$util.showLoading()
       this.$back.get('sanctum/csrf-cookie')
         .then(res => {
-          console.log('res', res)
         })
         .catch(e => {
           console.log('error', e)
@@ -135,6 +134,10 @@ export default {
         return null
       }
       return decodeURIComponent(xsrfCookies[0].split('=')[1])
+    },
+    onSuccess () {
+      this.dialog.new_user = false
+      this.$util.showMessage('Utilisateur ajouté avec succées')
     }
   },
   mounted () {

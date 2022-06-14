@@ -1,5 +1,5 @@
 export default {
-  propertyList: 'Real estate list',
+  propertyList: 'Property list',
   price: 'Price',
   newProperty: 'New property',
   cancel: 'Cancel',
@@ -7,5 +7,8 @@ export default {
   addProperty: 'Add property',
   add: 'Add',
   login: 'Login',
-  registerPage: 'Register page'
+  registerPage: 'Register page',
+  user: 'User',
+  property: 'Property',
+  exportData: 'Export data'
 }

@@ -113,7 +113,6 @@ export default {
     }
     const handleProperties = data => {
       properties.value = data
-      console.log('props', properties.value)
     }
     const handleSelected = data => {
       selected.value = data
@@ -166,7 +165,6 @@ export default {
       this.$util.showLoading()
       this.$back.get('api/v1/property')
         .then(res => {
-          console.log('res', res)
           this.handleProperties(res.property)
         })
         .catch(e => {

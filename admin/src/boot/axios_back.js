@@ -92,8 +92,33 @@ const createAxiosResponseInterceptor = () => {
     (response) => {
       return response.data
     }, async (error) => {
-      console.log('error message', error)
-      util.showError(error.response.data.message)
+      const messages = []
+      let message = ''
+      const err = error.response.data
+      if (err.errors) {
+        for (const key in err.errors) {
+          if (err.errors[key] instanceof Array) {
+            for (let i2 = 0; i2 < err.errors[key].length; i2++) {
+              messages.push(err.errors[key][i2])
+            }
+          } else {
+            messages.push(err.errors[key])
+          }
+        }
+      } else {
+        if (!err.response) {
+          message = "Une erreur s'est produit"
+        } else {
+          message = err.response.data.message
+        }
+      }
+      if (messages[0]) {
+        for (let i = 0; i < messages.length; i++) {
+          util.showError(messages[i])
+        }
+      } else {
+        util.showError(message)
+      }
       return Promise.reject(error)
     }
   )

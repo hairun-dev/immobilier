@@ -69,7 +69,6 @@ export default {
   },
   methods: {
     getImageGallery (it) {
-      console.log('it', it.id)
       return `${this.BASE_URL}/avatar/${it.id}/${it.file_name}`
     }
   },
