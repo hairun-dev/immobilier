@@ -49,7 +49,7 @@
         </q-tr>
         <q-tr v-show="props.expand" :props="props">
           <q-td colspan="100%">
-            <property-gallery-vue :data="props.row.galleries"></property-gallery-vue>
+            <property-gallery-vue :data="props.row.gallery"></property-gallery-vue>
           </q-td>
         </q-tr>
       </template>
@@ -69,36 +69,36 @@ import NewPropertyVue from 'src/components/dialogs/NewProperty.vue'
 import PropertyGalleryVue from '../components/PropertyGallery.vue'
 import DeleteConfirmVue from 'src/components/dialogs/DialogConfirmation.vue'
 
-const DEFAULT = [{
-  id: 1,
-  adresse: 'Ambalavao',
-  prix: 500,
-  description: 'Description bien immobilier Ambalavao',
-  galleries: [
-    'https://picsum.photos/id/1/300/300',
-    'https://picsum.photos/id/2/300/300',
-    'https://picsum.photos/id/3/300/300',
-    'https://picsum.photos/id/4/300/300'
-  ]
-}, {
-  id: 2,
-  adresse: 'Fianarantsoa',
-  prix: 15000,
-  description: 'Description bien immobilier Fianarantsoa',
-  galleries: [
-    'https://picsum.photos/id/5/300/300',
-    'https://picsum.photos/id/6/300/300',
-    'https://picsum.photos/id/7/300/300',
-    'https://picsum.photos/id/8/300/300',
-    'https://picsum.photos/id/9/300/300'
-  ]
-}, {
-  id: 3,
-  adresse: 'Tana',
-  prix: 1053000,
-  description: 'Description bien immobilier Tana',
-  galleries: []
-}]
+// const DEFAULT = [{
+//   id: 1,
+//   adresse: 'Ambalavao',
+//   prix: 500,
+//   description: 'Description bien immobilier Ambalavao',
+//   galleries: [
+//     'https://picsum.photos/id/1/300/300',
+//     'https://picsum.photos/id/2/300/300',
+//     'https://picsum.photos/id/3/300/300',
+//     'https://picsum.photos/id/4/300/300'
+//   ]
+// }, {
+//   id: 2,
+//   adresse: 'Fianarantsoa',
+//   prix: 15000,
+//   description: 'Description bien immobilier Fianarantsoa',
+//   galleries: [
+//     'https://picsum.photos/id/5/300/300',
+//     'https://picsum.photos/id/6/300/300',
+//     'https://picsum.photos/id/7/300/300',
+//     'https://picsum.photos/id/8/300/300',
+//     'https://picsum.photos/id/9/300/300'
+//   ]
+// }, {
+//   id: 3,
+//   adresse: 'Tana',
+//   prix: 1053000,
+//   description: 'Description bien immobilier Tana',
+//   galleries: []
+// }]
 export default {
   setup () {
     const dialogNewProperty = ref(false)
@@ -142,8 +142,8 @@ export default {
     columns () {
       return [
         { name: 'id', required: true, label: 'Id', align: 'left', field: row => row.id, format: val => `${val}`, sortable: true },
-        { name: 'adresse', required: true, label: 'Adresse', align: 'left', field: row => row.adresse, format: val => `${val}`, sortable: true },
-        { name: 'prix', align: 'right', label: this.$t('price'), field: 'prix', format: val => `${Number(val).toLocaleString()} €`, sortable: true },
+        { name: 'address', required: true, label: 'Adresse', align: 'left', field: row => row.address, format: val => `${val}`, sortable: true },
+        { name: 'price', align: 'right', label: this.$t('price'), field: 'price', format: val => `${Number(val).toLocaleString()} €`, sortable: true },
         { name: 'description', align: 'left', label: 'Déscription', field: 'description', sortable: true },
         { name: 'action', align: 'center', label: '', field: 'action' }
       ]
@@ -167,6 +167,7 @@ export default {
       this.$back.get('api/v1/property')
         .then(res => {
           console.log('res', res)
+          this.handleProperties(res.property)
         })
         .catch(e => {
           console.log('ERROR ON GETALL PROPERTY', e)
@@ -191,7 +192,7 @@ export default {
     }
   },
   mounted () {
-    this.handleProperties(DEFAULT)
+    // this.handleProperties(DEFAULT)
     this.getAllProperties()
   }
 }

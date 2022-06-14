@@ -77,7 +77,8 @@
     <q-separator />
 
     <q-card-actions align="right">
-      <q-btn :label="$t('save')" color="primary" @click="onRegister" />
+      <q-btn label="Cancel" no-caps @click="$emit('close')" />
+      <q-btn :label="$t('save')" no-caps color="primary" @click="onRegister" />
     </q-card-actions>
     <q-file class="fileAvatar" v-model="avatar.file" label="Standard" style="display: none;" />
   </q-card>
@@ -130,6 +131,10 @@ export default {
     async onRegister () {
       const isValid = await this.$refs.myForm.validate()
       if (isValid) {
+        if (!this.avatar.file) {
+          this.$util.showError('Veuillez selectionner votre photo de profil')
+          return
+        }
         console.log('valid')
         // update
         if (this.data) {
@@ -145,7 +150,7 @@ export default {
         email: this.email,
         password: this.password,
         password_confirmation: this.password2,
-        avatar: this.avatar.binary
+        avatar: this.$util.convertMultipartFile(this.avatar.file)
       }
       this.$util.showLoading()
       this.$back.post('api/v1/register', payload)
@@ -191,6 +196,7 @@ export default {
           file: val,
           binary
         })
+        console.log('avatar', this.avatar.file)
       }
     }
   }

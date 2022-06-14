@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { util } from 'src/boot/util'
 import { boot } from 'quasar/wrappers'
-import { set } from 'lodash'
+// import { set } from 'lodash'
 // import { LocalStorage } from 'quasar'
 
 const myInstance = axios.create({
@@ -13,13 +13,14 @@ const FORM_URLENCODED = 'application/x-www-form-urlencoded'
 const injectAuthToken = (options, authNeeded = 'jwt') => {
   if (authNeeded) {
     // set(options, ['headers', 'X-XSRF-TOKEN'], LocalStorage.getItem('csrf').replace('=', '%3D'))
-    set(options, ['headers', 'X-XSRF-TOKEN'], 'eyJpdiI6Ik8zRWViNU1kZG12V1FsQXJaRUZDTFE9PSIsInZhbHVlIjoiQTRSQUtlaUJDa0ZRNnZvUUl4SmsyN25JbnBNTDlpWjVrbURuZ0pQbUsxMUFncWlUSWdzcVNSY21hWU82ZlZMd0pnRUtQdmgzTGE1VEFQY21OTHcyRys2TFI3UkMxUHcxR1kzU1JORTluMFJ4MU43SUxpcmpSTmM4aHNSR1NhcWMiLCJtYWMiOiI5MWFmNWFiYjA4MGEwYzAxZmY5MDJjMTVlZGVlY2YwOTQ2YjNhMjZkNWU1YzYyYzRiODVjZGFhMjVjMmQwMDM1IiwidGFnIjoiIn0%3D; Path=/; Expires=Tue, 14 Jun 2022 06:58:56 GMT;')
+    // set(options, ['headers', 'X-XSRF-TOKEN'], 'eyJpdiI6Ik8zRWViNU1kZG12V1FsQXJaRUZDTFE9PSIsInZhbHVlIjoiQTRSQUtlaUJDa0ZRNnZvUUl4SmsyN25JbnBNTDlpWjVrbURuZ0pQbUsxMUFncWlUSWdzcVNSY21hWU82ZlZMd0pnRUtQdmgzTGE1VEFQY21OTHcyRys2TFI3UkMxUHcxR1kzU1JORTluMFJ4MU43SUxpcmpSTmM4aHNSR1NhcWMiLCJtYWMiOiI5MWFmNWFiYjA4MGEwYzAxZmY5MDJjMTVlZGVlY2YwOTQ2YjNhMjZkNWU1YzYyYzRiODVjZGFhMjVjMmQwMDM1IiwidGFnIjoiIn0%3D; Path=/; Expires=Tue, 14 Jun 2022 06:58:56 GMT;')
   }
   return options
 }
 const jsonToFormDataConverter = (json) => {
   const formData = new FormData()
   for (const key in json) {
+    console.log('append', json[key])
     formData.append(key, json[key])
   }
   return formData
@@ -78,7 +79,6 @@ const buildRequestOptions = (method, url, data = null, authNeeded = 'jwt', json 
     options.options = opt
   }
   injectData(options, data, content)
-  console.log('option', options)
   return options
 }
 const createAxiosResponseInterceptor = () => {
@@ -99,7 +99,7 @@ export const axiosWrapper = {
     return myInstance.request(buildRequestOptions('GET', url, null, authNeeded, false, FORM_URLENCODED, options))
   },
   post: (url, data, authNeeded = 'jwt', json = false, options = null) => {
-    return myInstance.request(buildRequestOptions('POST', url, data, authNeeded, json, FORM_URLENCODED, options))
+    return myInstance.request(buildRequestOptions('POST', url, data, authNeeded, json, FORM_DATA, options))
   },
   put: (url, data, authNeeded = 'jwt', json = false) => {
     return myInstance.request(buildRequestOptions('PUT', url, data, authNeeded, json, FORM_URLENCODED))

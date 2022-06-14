@@ -70,7 +70,7 @@ export default {
     // VueGoogleAutocomplete
   },
   props: ['data'],
-  setup (props) {
+  setup () {
     const id = ref(null)
     const address = ref(null)
     const price = ref(null)
@@ -111,7 +111,10 @@ export default {
     async onSave () {
       const isValid = await this.$refs.myForm.validate()
       if (isValid) {
-        console.log('valid')
+        if (!this.photos[0]) {
+          this.$util.showError('Veuillez ajouter au moins un photo')
+          return
+        }
         // update
         if (this.data) {
           this.updateProperty()
@@ -125,14 +128,17 @@ export default {
     },
     addProperty () {
       const payload = {
-        adresse: this.address,
-        prix: this.price,
+        address: this.address,
+        price: parseInt(this.price),
         description: this.description,
-        photos: this.photos.map(it => it.file)
+        images: this.photos.map(it => it.file),
+        user_id: 1
       }
+      console.log('data', payload)
       this.$util.showLoading()
       this.$back.post('api/v1/property', payload)
         .then(res => {
+          this.$emit('close')
           this.$emit('refresh')
         })
         .catch(e => {
