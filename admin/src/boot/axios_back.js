@@ -20,8 +20,13 @@ const injectAuthToken = (options, authNeeded = 'jwt') => {
 const jsonToFormDataConverter = (json) => {
   const formData = new FormData()
   for (const key in json) {
-    // console.log('append', json[key])
-    formData.append(key, json[key])
+    if (json[key] instanceof Array) {
+      for (let i = 0; i < json[key].length; i++) {
+        formData.append(key, json[key][i])
+      }
+    } else {
+      formData.append(key, json[key])
+    }
   }
   return formData
 }

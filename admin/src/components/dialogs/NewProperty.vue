@@ -135,7 +135,7 @@ export default {
         user_id: 1
       }
       for (let i = 0; i < this.photos.length; i++) {
-        payload[`image[${i}]`] = this.photos[i].file
+        payload[`images[${i}]`] = this.photos[i].file
       }
       console.log('data', payload)
       this.$util.showLoading()
