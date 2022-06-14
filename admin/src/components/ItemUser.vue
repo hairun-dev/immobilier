@@ -81,7 +81,7 @@ export default {
   computed: {
     urlProfil () {
       if (!this.data.avatar) return 'avatar2.png'
-      return `${this.BASE_URL}/${this.data.id}/${this.data.avatar.file_name}`
+      return `${this.BASE_URL}/avatar/${this.data.avatar.id}/${this.data.avatar.file_name}`
     }
   },
   mounted () {

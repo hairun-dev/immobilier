@@ -67,7 +67,7 @@ export default defineComponent({
   },
   mounted () {
     // this.addGoogleMapKey()
-    this.checkUser()
+    // this.checkUser()
     this.switchLocale()
   },
   watch: {

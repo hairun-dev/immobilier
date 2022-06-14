@@ -62,6 +62,8 @@
 <script>
 import { ref } from 'vue'
 import NewUserVue from 'src/components/dialogs/NewUser.vue'
+// import { LocalStorage } from 'quasar'
+// import axios from 'axios'
 export default {
   components: {
     NewUserVue
@@ -88,11 +90,11 @@ export default {
     async onLogin () {
       const isValid = await this.$refs.myForm.validate()
       if (isValid) {
-        this.$util.showLoading()
         const payload = {
           email: this.email,
           password: this.password
         }
+        // await this.$back.get('sanctum/csrf-cookie')
         this.$back.post('api/v1/login', payload)
           .then(res => {
             console.log('res', res.headers)
@@ -140,6 +142,12 @@ export default {
     // this.checkToken()
     // console.log('getCook', this.getCookie('XSRF-TOKEN'))
     console.log('doc', document.cookie)
+  },
+  async created () {
+    // await this.checkToken()
+    // const csrf = await this.getCookie('XSRF-TOKEN')
+    // console.log('csrf', csrf)
+    // LocalStorage.set('csrf', csrf)
   }
 }
 </script>

@@ -158,10 +158,24 @@ export default {
     onUpdate (idx) {
       this.handleSelected(this.properties[idx])
       this.dialog.new_property = true
+    },
+    getProperties () {
+      this.$util.showLoading()
+      this.$back.get('api/v1/property')
+        .then(res => {
+          console.log('res', res)
+        })
+        .catch(e => {
+          console.log('ERROR ON GETALL PROPERTY', e)
+        })
+        .then(() => {
+          this.$util.hideLoading()
+        })
     }
   },
   mounted () {
     this.handleProperties(DEFAULT)
+    this.getProperties()
   }
 }
 </script>

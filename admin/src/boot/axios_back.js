@@ -2,16 +2,18 @@ import axios from 'axios'
 import { util } from 'src/boot/util'
 import { boot } from 'quasar/wrappers'
 import { set } from 'lodash'
-import { LocalStorage } from 'quasar'
+// import { LocalStorage } from 'quasar'
 
 const myInstance = axios.create({
   baseURL: process.env.API_BASE_URL
 })
+myInstance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 const FORM_DATA = 'multipart/form-data'
 const FORM_URLENCODED = 'application/x-www-form-urlencoded'
 const injectAuthToken = (options, authNeeded = 'jwt') => {
   if (authNeeded) {
-    set(options, ['headers', 'Authorization'], `Bearer ${LocalStorage.getItem(authNeeded)}`)
+    // set(options, ['headers', 'X-XSRF-TOKEN'], LocalStorage.getItem('csrf').replace('=', '%3D'))
+    set(options, ['headers', 'X-XSRF-TOKEN'], 'eyJpdiI6Ik8zRWViNU1kZG12V1FsQXJaRUZDTFE9PSIsInZhbHVlIjoiQTRSQUtlaUJDa0ZRNnZvUUl4SmsyN25JbnBNTDlpWjVrbURuZ0pQbUsxMUFncWlUSWdzcVNSY21hWU82ZlZMd0pnRUtQdmgzTGE1VEFQY21OTHcyRys2TFI3UkMxUHcxR1kzU1JORTluMFJ4MU43SUxpcmpSTmM4aHNSR1NhcWMiLCJtYWMiOiI5MWFmNWFiYjA4MGEwYzAxZmY5MDJjMTVlZGVlY2YwOTQ2YjNhMjZkNWU1YzYyYzRiODVjZGFhMjVjMmQwMDM1IiwidGFnIjoiIn0%3D; Path=/; Expires=Tue, 14 Jun 2022 06:58:56 GMT;')
   }
   return options
 }
@@ -60,7 +62,7 @@ const injectData = (options, data, json = null) => {
         options.headers = {}
       }
       options.headers['Content-Type'] = json
-      options.headers['XSRF-TOKEN'] = 'eyJpdiI6IjVYcWpKZlo1d3A1R3NZWElKUTRYUkE9PSIsInZhbHVlIjoiT3FkQm5laG56bkFUMEwxNzJMa3VIVnFCZ0J1TFBiUDJReFdvQlB1ZjJBL0g1UEpQdUNUK083LzdZaDR1M0E3azBHV0tsay81VVYreGdWS1BZN3U4SzNKUEZZbW1QNUk4OTF5RzRYK2pPenRSa2ZoVW9za2pTa3ZVUFVtbk02QXQiLCJtYWMiOiI5Njc5MGI3ZWEyMzNjMmEyNzQ1ZDU0Y2FiZGZhNGMxOWQ3YmRjODQ3NTk4M2FmYjY5MmMwZDc4ZmE5OTBiNzU4IiwidGFnIjoiIn0%3D'
+      // options.headers['XSRF-TOKEN'] = 'eyJpdiI6IjVYcWpKZlo1d3A1R3NZWElKUTRYUkE9PSIsInZhbHVlIjoiT3FkQm5laG56bkFUMEwxNzJMa3VIVnFCZ0J1TFBiUDJReFdvQlB1ZjJBL0g1UEpQdUNUK083LzdZaDR1M0E3azBHV0tsay81VVYreGdWS1BZN3U4SzNKUEZZbW1QNUk4OTF5RzRYK2pPenRSa2ZoVW9za2pTa3ZVUFVtbk02QXQiLCJtYWMiOiI5Njc5MGI3ZWEyMzNjMmEyNzQ1ZDU0Y2FiZGZhNGMxOWQ3YmRjODQ3NTk4M2FmYjY5MmMwZDc4ZmE5OTBiNzU4IiwidGFnIjoiIn0%3D'
     }
   }
   return options
@@ -76,6 +78,7 @@ const buildRequestOptions = (method, url, data = null, authNeeded = 'jwt', json 
     options.options = opt
   }
   injectData(options, data, content)
+  console.log('option', options)
   return options
 }
 const createAxiosResponseInterceptor = () => {
