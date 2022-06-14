@@ -87,31 +87,8 @@ const createAxiosResponseInterceptor = () => {
     (response) => {
       return response.data
     }, async (error) => {
-      const status = error.response.data.data.status
-      const data = error.response.data.message
-      console.log('error', error.response.data.data.status)
-      switch (status) {
-        case 400:
-          if (typeof data === 'string') {
-            util.showError(data)
-          } else {
-            for (const key in data) {
-              switch (key) {
-                case 'user_code':
-                  break
-                default:
-                  util.showError(`${data[key]}`)
-              }
-            }
-          }
-          return Promise.reject(error.response.data)
-        case 403:
-          util.showMessage(data)
-          // util.showMessage('Vous n\'êtes pas autorisé, veuillez contacter l\'admin')
-          return Promise.reject(error.response.data)
-        default:
-          return Promise.reject(error.response.data)
-      }
+      util.showError(error.response.data.message)
+      return Promise.reject(error)
     }
   )
 }

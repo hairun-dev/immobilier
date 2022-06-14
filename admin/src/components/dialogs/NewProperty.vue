@@ -43,13 +43,22 @@
         />
       </q-form>
     </q-card-section>
-
+    <q-btn class="q-ml-md" no-caps size="sm" @click="$util.openPick('filePhoto')">+ Ajouter photo</q-btn>
+    <q-scroll-area style="height: 150px; max-width: 400px;">
+      <div class="photos row no-wrap">
+        <div class="photo" v-for="(it, idx) in photos" :key="idx">
+          <div class="x" @click="removePhoto(idx)">x</div>
+          <img :src="it.binary" alt="">
+        </div>
+      </div>
+    </q-scroll-area>
     <q-separator />
 
     <q-card-actions align="right">
       <q-btn flat :label="$t('cancel')" color="primary" @click="$emit('close')" />
       <q-btn :label="$t('add')" color="primary" @click="onSave" />
     </q-card-actions>
+    <q-file class="filePhoto" v-model="photo" label="Standard" style="display: none;" />
   </q-card>
 </template>
 
@@ -66,11 +75,20 @@ export default {
     const address = ref(null)
     const price = ref(null)
     const description = ref(null)
+    const photo = ref(null)
+    const photos = ref([])
     const updateValue = data => {
       id.value = data.id
       address.value = data.adresse
       price.value = data.prix
       description.value = data.description
+    }
+    const addPhoto = photo => {
+      photos.value.push(photo)
+    }
+    const removePhoto = idx => {
+      console.log('remove', idx)
+      photos.value.splice(idx, 1)
     }
 
     return {
@@ -78,7 +96,11 @@ export default {
       address,
       price,
       description,
-      updateValue
+      updateValue,
+      photos,
+      addPhoto,
+      photo,
+      removePhoto
     }
   },
   data () {
@@ -92,9 +114,9 @@ export default {
         console.log('valid')
         // update
         if (this.data) {
-          this.addProperty()
-        } else {
           this.updateProperty()
+        } else {
+          this.addProperty()
         }
       }
     },
@@ -105,12 +127,13 @@ export default {
       const payload = {
         adresse: this.address,
         prix: this.price,
-        description: this.description
+        description: this.description,
+        photos: this.photos.map(it => it.file)
       }
       this.$util.showLoading()
       this.$back.post('api/v1/property', payload)
         .then(res => {
-          console.log('res', res)
+          this.$emit('refresh')
         })
         .catch(e => {
           console.log('ERROR ON ADD PROPERTY', e)
@@ -128,7 +151,7 @@ export default {
       this.$util.showLoading()
       this.$back.post(`api/v1/user/update/${this.id}`, payload)
         .then(res => {
-          console.log('res', res)
+          this.$emit('refresh')
         })
         .catch(e => {
           console.log('ERROR ON UPDATE USER', e)
@@ -144,6 +167,17 @@ export default {
     }
   },
   computed: {
+  },
+  watch: {
+    async photo (val) {
+      if (val) {
+        const file = await this.$util.convertFile(val)
+        this.addPhoto({
+          binary: file,
+          file: val
+        })
+      }
+    }
   }
 }
 </script>
@@ -151,4 +185,26 @@ export default {
 <style lang="sass" scoped>
 .newProperty
   min-width: 400px
+
+  .photos
+    height: 100px
+    padding: 10px
+
+    .photo
+      width: 80px
+      height: 100%
+      border: 1px grey solid
+      position: relative
+      margin-right: 10px
+      padding: 5px
+
+      .x
+        position: absolute
+        top: 0
+        right: 5px
+        cursor: pointer
+
+      img
+        width: 100%
+        height: 100%
 </style>

@@ -28,6 +28,23 @@ export const util = {
       reader.readAsDataURL(file)
     }
   },
+  convertFile(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) reject('File undefined')
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        resolve(e.target.result)
+      }
+      reader.readAsDataURL(file)
+    })
+    // if (file) {
+    //   const reader = new FileReader()
+    //   reader.onload = (e) => {
+    //     inp.push(e.target.result)
+    //   }
+    //   reader.readAsDataURL(file)
+    // }
+  },
   openPick(classe) {
     const button = document.querySelector(`.${classe}`)
     button.click()

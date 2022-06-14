@@ -8,7 +8,7 @@
 
     <q-card-section class="q-ma-md">
       <div class="avatar" v-if="!data">
-        <img @click="$util.openPick('fileAvatar')" :src="avatar.binary[0] ? avatar.binary[0] : 'avatar2.png'" alt="" srcset="">
+        <img @click="$util.openPick('fileAvatar')" :src="avatar.binary ? avatar.binary : 'avatar2.png'" alt="" srcset="">
       </div>
       <q-form
         @submit="onRegister"
@@ -94,6 +94,7 @@ export default {
     const password2 = ref(null)
     const isVisible = ref(false)
     const isVisible2 = ref(false)
+    const avatar = ref({})
 
     const updateValue = data => {
       name.value = data.name
@@ -101,6 +102,10 @@ export default {
       id.value = data.id
       password.value = 'x'
       password2.value = 'x'
+    }
+
+    const setAvatar = data => {
+      avatar.value = data
     }
 
     return {
@@ -111,15 +116,13 @@ export default {
       password2,
       isVisible,
       isVisible2,
-      updateValue
+      updateValue,
+      avatar,
+      setAvatar
     }
   },
   data () {
     return {
-      avatar: {
-        file: undefined,
-        binary: []
-      }
     }
   },
   props: ['data'],
@@ -142,7 +145,7 @@ export default {
         email: this.email,
         password: this.password,
         password_confirmation: this.password2,
-        avatar: this.avatar.file
+        avatar: this.avatar.binary
       }
       this.$util.showLoading()
       this.$back.post('api/v1/register', payload)
@@ -181,10 +184,13 @@ export default {
     }
   },
   watch: {
-    'avatar.file' (val) {
+    async 'avatar.file' (val) {
       if (val) {
-        this.avatar.binary = []
-        this.$util.getImageBinary(this.avatar.binary, this.avatar.file)
+        const binary = await this.$util.convertFile(val)
+        this.setAvatar({
+          file: val,
+          binary
+        })
       }
     }
   }

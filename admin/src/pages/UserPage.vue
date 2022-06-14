@@ -2,7 +2,7 @@
   <div class="boxUser">
     <q-btn class="q-mb-md" @click="exportData">Exporter data</q-btn>
     <div class="listUser">
-      <item-user-vue v-for="(it, idx) in users" :key="idx" :data="it"></item-user-vue>
+      <item-user-vue @refresh="getUsers" v-for="(it, idx) in users" :key="idx" :data="it"></item-user-vue>
     </div>
   </div>
 </template>

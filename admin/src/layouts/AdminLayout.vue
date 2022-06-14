@@ -5,17 +5,23 @@
       <div @click="onNavClicked('bien')" class="btnNav" :class="selected === 'bien' ? 'selected' : ''">Bien immobilier</div>
       <q-space></q-space>
       <q-select dense :options="lang.options" v-model="lang.selected" outlined class="q-mr-sm"></q-select>
+      <img @click="dialogLogout = true" class="img-logout" src="power-off.png" alt="">
     </div>
     <router-view></router-view>
+    <q-dialog v-model="dialogLogout">
+      <confirmation-vue @close="dialogLogout = false" message="Voulez-vous vraiment deconnecter?"></confirmation-vue>
+    </q-dialog>
   </div>
 </template>
 
 <script>
+import ConfirmationVue from 'src/components/dialogs/DialogConfirmation.vue'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'AdminPage',
   components: {
+    ConfirmationVue
   },
   data () {
     return {
@@ -32,7 +38,8 @@ export default defineComponent({
           label: 'FR'
         }
       },
-      selected: 'user'
+      selected: 'user',
+      dialogLogout: false
     }
   },
   methods: {
@@ -67,7 +74,7 @@ export default defineComponent({
   },
   mounted () {
     // this.addGoogleMapKey()
-    // this.checkUser()
+    this.checkUser()
     this.switchLocale()
   },
   watch: {
@@ -105,5 +112,11 @@ export default defineComponent({
 
   .selected
     background-color: rgba(0, 0, 0, 0.5)
+
+  .img-logout
+    width: 30px
+    height: 30px
+    margin-right: 20px
+    cursor: pointer
 
 </style>

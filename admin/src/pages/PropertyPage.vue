@@ -9,7 +9,7 @@
       <template v-slot:top="props">
         <div class="q-table__title">{{$t('propertyList')}}</div>
         <q-space />
-        <q-btn size="sm" color="accent" dense @click="handleDialogNewProperty(true)" icon="add"  :label="$t('addProperty')" no-caps class="q-px-sm"/>
+        <q-btn size="sm" color="accent" dense @click="onAddProperty" icon="add"  :label="$t('addProperty')" no-caps class="q-px-sm"/>
         <q-btn
           flat round dense
           :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
@@ -55,7 +55,7 @@
       </template>
     </q-table>
     <q-dialog v-model="dialogNewProperty" persistent position="top">
-      <new-property-vue :data="selected" @close="handleDialogNewProperty(false)"></new-property-vue>
+      <new-property-vue @refresh="getAllProperties" :data="selected" @close="handleDialogNewProperty(false)"></new-property-vue>
     </q-dialog>
     <q-dialog v-model="dialogConfirmation" persistent>
       <delete-confirm-vue message="Voulez-vous supprimer cet bien?" @ok="onDeleteOk" @close="handleDialogConfirmation(false)"></delete-confirm-vue>
@@ -67,7 +67,7 @@
 import { ref } from 'vue'
 import NewPropertyVue from 'src/components/dialogs/NewProperty.vue'
 import PropertyGalleryVue from '../components/PropertyGallery.vue'
-import DeleteConfirmVue from 'src/components/dialogs/DeleteConfirm.vue'
+import DeleteConfirmVue from 'src/components/dialogs/DialogConfirmation.vue'
 
 const DEFAULT = [{
   id: 1,
@@ -151,15 +151,18 @@ export default {
   },
   methods: {
     onDelete (idx) {
-      console.log('mandalo')
       this.handleSelected(this.properties[idx])
       this.handleDialogConfirmation(true)
     },
     onUpdate (idx) {
       this.handleSelected(this.properties[idx])
-      this.dialog.new_property = true
+      this.handleDialogNewProperty(true)
     },
-    getProperties () {
+    onAddProperty () {
+      this.handleSelected(null)
+      this.handleDialogNewProperty(true)
+    },
+    getAllProperties () {
       this.$util.showLoading()
       this.$back.get('api/v1/property')
         .then(res => {
@@ -171,11 +174,25 @@ export default {
         .then(() => {
           this.$util.hideLoading()
         })
+    },
+    onDeleteOk () {
+      this.handleDialogConfirmation(false)
+      this.$util.showLoading()
+      this.$back.delete(`api/v1/property/${this.selected.id}`)
+        .then(res => {
+          this.getAllProperties()
+        })
+        .catch(e => {
+          console.log('ERROR ON DELETE PROPERTY', e)
+        })
+        .then(() => {
+          this.$util.hideLoading()
+        })
     }
   },
   mounted () {
     this.handleProperties(DEFAULT)
-    this.getProperties()
+    this.getAllProperties()
   }
 }
 </script>

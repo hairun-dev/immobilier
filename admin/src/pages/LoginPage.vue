@@ -62,15 +62,13 @@
 <script>
 import { ref } from 'vue'
 import NewUserVue from 'src/components/dialogs/NewUser.vue'
-// import { LocalStorage } from 'quasar'
-// import axios from 'axios'
 export default {
   components: {
     NewUserVue
   },
   setup () {
-    const email = ref('harilanto@hairun-technology.com')
-    const password = ref('azert123')
+    const email = ref(null)
+    const password = ref(null)
     const isVisible = ref(false)
 
     return {
@@ -94,13 +92,14 @@ export default {
           email: this.email,
           password: this.password
         }
+        this.$util.showLoading()
         // await this.$back.get('sanctum/csrf-cookie')
         this.$back.post('api/v1/login', payload)
           .then(res => {
-            console.log('res', res.headers)
+            this.onLogged(payload)
           })
           .catch(e => {
-            console.log('error', e)
+            console.log('error', e.response.data.message)
           })
           .then(() => {
             this.$util.hideLoading()
@@ -109,7 +108,7 @@ export default {
     },
     onLogged (user) {
       this.$q.localStorage.set('user', user)
-      this.$router.push({ name: 'immobilier', params: { lang: 'en' } })
+      this.$router.push({ name: 'user', params: { lang: 'en' } })
     },
     checkToken () {
       this.$util.showLoading()
@@ -139,15 +138,8 @@ export default {
     }
   },
   mounted () {
-    // this.checkToken()
-    // console.log('getCook', this.getCookie('XSRF-TOKEN'))
-    console.log('doc', document.cookie)
   },
   async created () {
-    // await this.checkToken()
-    // const csrf = await this.getCookie('XSRF-TOKEN')
-    // console.log('csrf', csrf)
-    // LocalStorage.set('csrf', csrf)
   }
 }
 </script>

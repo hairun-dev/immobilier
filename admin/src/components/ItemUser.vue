@@ -23,7 +23,7 @@
 <script>
 import { ref } from 'vue'
 import NewUserVue from './dialogs/NewUser.vue'
-import DeleteConfirmVue from './dialogs/DeleteConfirm.vue'
+import DeleteConfirmVue from './dialogs/DialogConfirmation.vue'
 export default {
   components: {
     NewUserVue,
@@ -68,7 +68,7 @@ export default {
       this.$util.showLoading()
       this.$back.delete(`api/v1/user/${this.data.id}`)
         .then(res => {
-          console.log('res', res)
+          this.$emit('refresh')
         })
         .catch(e => {
           console.log('ERROR ON DELETE USER', e)
